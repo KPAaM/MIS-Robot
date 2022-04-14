@@ -60,8 +60,8 @@ catkin_package(
 )
 
 add_library(franka_mis_controllers
-  src/cartesian_velocity_example_controller.cpp
-  src/force_example_controller.cpp
+  src/cartesian_velocity_controller.cpp
+  src/force_controller.cpp
 )
 
 add_dependencies(franka_mis_controllers

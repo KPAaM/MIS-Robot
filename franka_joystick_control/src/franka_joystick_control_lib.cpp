@@ -28,20 +28,24 @@ FrankaJoystickControl::FrankaJoystickControl(ros::NodeHandle *nh)
 ///////////////////////////////////////////////////////////////////////
 void FrankaJoystickControl::joystickCallback(const joystick_msgs::Joystick::ConstPtr &msg)
 {
-  joystick_cmd.change_mode = msg->button_1;
   joystick_cmd.EEF_x_cmd  = _EEF_INCREMENT*(-msg->axis_2/32767);
   CreateGoalFrame(joystick_cmd.EEF_x_cmd);
-  // click function for error recovery button
-  if (!msg->button_3 && joystick_cmd.error_recovery_flag)
-  {
-    joystick_cmd.error_recovery = true;
-    joystick_cmd.error_recovery_flag = false;
-  }
-  else if (msg->button_3)
-  {
-    joystick_cmd.error_recovery_flag = true;
-  }
 
+  // If statement to avoid multiple recovery requests
+  if (!joystick_cmd.error_recovery) joystick_cmd.error_recovery = msg->button_3;
+
+  //ButtonClickFunction(msg->button_3, joystick_cmd.error_recovery_flag);
+  if (ButtonClickFunction(msg->button_1, joystick_cmd.change_mode_flag) == 1)
+  {
+    if(joystick_cmd.change_mode == 1)
+    {
+      joystick_cmd.change_mode = 0;
+    }
+    else
+    {
+      joystick_cmd.change_mode = 1;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -109,7 +113,7 @@ void FrankaJoystickControl::ChangeController(const std::string start_controller,
     ROS_ERROR("Failed to switch controllers (from  %s to %s)", start_controller.c_str(), stop_controller.c_str());
   }
   // Flag variable for collaborative mode
-  if (start_controller == "force_example_controller")
+  if (start_controller == "force_controller")
   {
     collaborative_mode_flag = true;
   }
@@ -119,4 +123,21 @@ void FrankaJoystickControl::ChangeController(const std::string start_controller,
   }
 }
 
-
+///////////////////////////////////////////////////////////////////////
+/// \brief FrankaJoystickControl::ButtonClickFunction Click function for buttons
+/// \param BUTTON signal from button
+/// \param button_flag Flag of button being pressed (not released)
+///////////////////////////////////////////////////////////////////////
+int FrankaJoystickControl::ButtonClickFunction(const bool &BUTTON, bool &button_flag)
+{
+  if (!BUTTON && button_flag)
+  {
+    button_flag = false;
+    return 1;
+  }
+  else if(BUTTON)
+  {
+    button_flag = true;
+  }
+  return 0;
+}

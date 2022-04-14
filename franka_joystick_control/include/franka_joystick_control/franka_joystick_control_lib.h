@@ -35,14 +35,13 @@ class FrankaJoystickControl
                           const std::string stop_controller);
     void CreateGoalFrame(const double offset);
 
-
-
     struct JoystickControlCmd
     {
-      double EEF_x_cmd = 0.0;           // offset of EEF in its x axis
-      bool error_recovery = false;
-      bool error_recovery_flag = false;
-      int change_mode = 0;
+      double EEF_x_cmd = 0.0;             // offset of EEF in its x axis
+      bool error_recovery = false;        // button for error_recovery msg
+      bool error_recovery_flag = false;   // flag for being pressed
+      int change_mode = 0;                //
+      bool change_mode_flag = false;      // flag for being pressed
     };
 
     enum ControlMode
@@ -58,7 +57,7 @@ class FrankaJoystickControl
 
   private:
     const int _NUM_OF_JOINTS = 7;
-    const double _EEF_INCREMENT = 0.25;
+    const double _EEF_INCREMENT = 0.05;
 
     ros::Publisher _cartesian_goal_publisher;             // publisher for cartesian velocity commands
     ros::Publisher _franka_error_recovery_publisher;      // publisher for error recovery message
@@ -74,6 +73,8 @@ class FrankaJoystickControl
     // TF2 listener for goal_frame
     tf2_ros::Buffer _tfBuffer;
     tf2_ros::TransformListener _tfListener;
+
+    int ButtonClickFunction(const bool &BUTTON, bool &button_flag);
 };
 
 #endif // FRANKA_JOYSTICK_CONTROL_LIB_H

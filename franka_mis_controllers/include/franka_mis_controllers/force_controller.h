@@ -54,8 +54,6 @@ class ForceController : public controller_interface::MultiInterfaceController<
   std::unique_ptr<dynamic_reconfigure::Server<franka_mis_controllers::desired_mass_paramConfig>>
       dynamic_server_desired_mass_param_;
   ros::NodeHandle dynamic_reconfigure_desired_mass_param_node_;
-  void desiredMassParamCallback(franka_mis_controllers::desired_mass_paramConfig& config,
-                                uint32_t level);
 };
 
 }  // namespace franka_mis_controllers

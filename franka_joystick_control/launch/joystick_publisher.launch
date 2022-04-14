@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<launch>
+    <node name="joystick_publisher" pkg="franka_joystick_control" type="joystick_publisher" output="screen" />
+</launch>

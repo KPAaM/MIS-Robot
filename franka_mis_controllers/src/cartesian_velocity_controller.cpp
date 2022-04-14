@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Franka Emika GmbH
 // Use of this source code is governed by the Apache-2.0 license, see LICENSE
-#include <franka_mis_controllers/cartesian_velocity_example_controller.h>
+#include <franka_mis_controllers/cartesian_velocity_controller.h>
 
 #include <array>
 #include <cmath>
@@ -46,25 +46,7 @@ bool CartesianVelocityController::init(hardware_interface::RobotHW* robot_hardwa
     return false;
   }
 
-  // try {
-  //   auto state_handle = state_interface->getHandle(arm_id + "_robot");
-
-  //   std::array<double, 7> q_start = {{0, -M_PI_4, 0, -3 * M_PI_4, 0, M_PI_2, M_PI_4}};
-  //   for (size_t i = 0; i < q_start.size(); i++) {
-  //     if (std::abs(state_handle.getRobotState().q_d[i] - q_start[i]) > 0.1) {
-  //       ROS_ERROR_STREAM(
-  //           "CartesianVelocityExampleController: Robot is not in the expected starting position "
-  //           "for running this example. Run `roslaunch franka_example_controllers "
-  //           "move_to_start.launch robot_ip:=<robot-ip> load_gripper:=<has-attached-gripper>` "
-  //           "first.");
-  //       return false;
-  //     }
-  //   }
-  // } catch (const hardware_interface::HardwareInterfaceException& e) {
-  //   ROS_ERROR_STREAM(
-  //       "CartesianVelocityExampleController: Exception getting state handle: " << e.what());
-  //   return false;
-  // }
+  _cartesian_goal_sub = node_handle.subscribe("/joystick_cartesian_goal", 1, &CartesianVelocityController::CartesianGoalCallback, this);
 
   return true;
 }
@@ -77,22 +59,27 @@ void CartesianVelocityController::update(const ros::Time& /* time */,
                                                 const ros::Duration& period) {
   elapsed_time_ += period;
 
-  double time_max = 4.0;
-  double v_max = 0.05;
-  double angle = M_PI / 4.0;
-  double cycle = std::floor(
-      pow(-1.0, (elapsed_time_.toSec() - std::fmod(elapsed_time_.toSec(), time_max)) / time_max));
-  double v = cycle * v_max / 2.0 * (1.0 - std::cos(2.0 * M_PI / time_max * elapsed_time_.toSec()));
-  double v_x = std::cos(angle) * v;
-  double v_z = -std::sin(angle) * v;
-  std::array<double, 6> command = {{v_x, 0.0, v_z, 0.0, 0.0, 0.0}};
-  velocity_cartesian_handle_->setCommand(command);
+  double filter_value=0.01;
+
+  for (size_t i=0; i<6; i++)
+  {
+    _cartesian_velocity_prev[i] = filter_value*_cartesian_velocity_goal[i] + (1.0-filter_value)*_cartesian_velocity_prev[i];
+  }
+  velocity_cartesian_handle_->setCommand(_cartesian_velocity_prev);
 }
 
 void CartesianVelocityController::stopping(const ros::Time& /*time*/) {
   // WARNING: DO NOT SEND ZERO VELOCITIES HERE AS IN CASE OF ABORTING DURING MOTION
   // A JUMP TO ZERO WILL BE COMMANDED PUTTING HIGH LOADS ON THE ROBOT. LET THE DEFAULT
   // BUILT-IN STOPPING BEHAVIOR SLOW DOWN THE ROBOT.
+}
+
+
+void CartesianVelocityController::CartesianGoalCallback(const geometry_msgs::Twist::ConstPtr& msg)
+{
+  _cartesian_velocity_goal[0] = msg->linear.x;
+  _cartesian_velocity_goal[1] = msg->linear.y;
+  _cartesian_velocity_goal[2] = msg->linear.z;
 }
 
 }  // namespace franka_example_controllers

@@ -37,6 +37,8 @@ int main(int argc, char **argv)
     if (control.joystick_cmd.error_recovery)
     {
       control.ErrorRecovery();
+      control.joystick_cmd.error_recovery = false;
+      ROS_INFO("Request for recovery from error send...");
     }
 
     // ------ Changing controllers -------
@@ -45,13 +47,13 @@ int main(int argc, char **argv)
         && control.collaborative_mode_flag)
     {
       ROS_INFO("Changing mode to joystick control...");
-      control.ChangeController("cartesian_velocity_example_controller", "force_example_controller");
+      control.ChangeController("cartesian_velocity_controller", "force_controller");
     }
     // Enable collaborative mode
     else if (control.joystick_cmd.change_mode == control.FORCE_MODE
              && !control.collaborative_mode_flag) {
       ROS_INFO("Changing mode to collaborative...");
-      control.ChangeController("force_example_controller", "cartesian_velocity_example_controller");
+      control.ChangeController("force_controller", "cartesian_velocity_controller");
     }
 
     // Move according to a goal frame

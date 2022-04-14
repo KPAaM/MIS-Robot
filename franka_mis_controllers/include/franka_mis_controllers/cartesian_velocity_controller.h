@@ -11,6 +11,7 @@
 #include <hardware_interface/robot_hw.h>
 #include <ros/node_handle.h>
 #include <ros/time.h>
+#include <geometry_msgs/Twist.h>
 
 namespace franka_mis_controllers {
 
@@ -22,11 +23,17 @@ class CartesianVelocityController : public controller_interface::MultiInterfaceC
   void update(const ros::Time&, const ros::Duration& period) override;
   void starting(const ros::Time&) override;
   void stopping(const ros::Time&) override;
+  void CartesianGoalCallback(const geometry_msgs::Twist::ConstPtr& msg);
 
  private:
   franka_hw::FrankaVelocityCartesianInterface* velocity_cartesian_interface_;
   std::unique_ptr<franka_hw::FrankaCartesianVelocityHandle> velocity_cartesian_handle_;
   ros::Duration elapsed_time_;
+
+  std::array<double, 6> _cartesian_velocity_goal{};
+  std::array<double, 6> _cartesian_velocity_prev{};
+
+  ros::Subscriber _cartesian_goal_sub;
 };
 
 }  // namespace franka_mis_controllers

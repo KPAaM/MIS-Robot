@@ -1,6 +1,6 @@
 // Copyright (c) 2017 Franka Emika GmbH
 // Use of this source code is governed by the Apache-2.0 license, see LICENSE
-#include <franka_mis_controllers/force_example_controller.h>
+#include <franka_mis_controllers/force_controller.h>
 
 #include <cmath>
 #include <memory>
@@ -79,9 +79,8 @@ bool ForceController::init(hardware_interface::RobotHW* robot_hw,
       dynamic_reconfigure::Server<franka_mis_controllers::desired_mass_paramConfig>>(
 
       dynamic_reconfigure_desired_mass_param_node_);
-  dynamic_server_desired_mass_param_->setCallback(
-      boost::bind(&ForceController::desiredMassParamCallback, this, _1, _2));
-      target_mass_ = -0.8;
+
+  target_mass_ = 0.0;
   return true;
 }
 
@@ -93,7 +92,6 @@ void ForceController::starting(const ros::Time& /*time*/) {
   // Bias correction for the current external torque
   tau_ext_initial_ = tau_measured - gravity;
   tau_error_.setZero();
-        target_mass_ = -0.8;
 }
 
 void ForceController::update(const ros::Time& /*time*/, const ros::Duration& period) {
@@ -127,15 +125,6 @@ void ForceController::update(const ros::Time& /*time*/, const ros::Duration& per
   desired_mass_ = filter_gain_ * target_mass_ + (1 - filter_gain_) * desired_mass_;
   k_p_ = filter_gain_ * target_k_p_ + (1 - filter_gain_) * k_p_;
   k_i_ = filter_gain_ * target_k_i_ + (1 - filter_gain_) * k_i_;
-}
-
-void ForceController::desiredMassParamCallback(
-    franka_mis_controllers::desired_mass_paramConfig& config,
-    uint32_t /*level*/) {
-  target_mass_ = -config.desired_mass;
-  std::cout << target_mass_ << std::endl;
-  target_k_p_ = config.k_p;
-  target_k_i_ = config.k_i;
 }
 
 Eigen::Matrix<double, 7, 1> ForceController::saturateTorqueRate(
