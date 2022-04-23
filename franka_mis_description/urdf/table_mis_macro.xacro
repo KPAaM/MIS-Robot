@@ -1,0 +1,295 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+<xacro:macro name="table_mis" params="prefix">
+    <!-- Table link -->
+    <link name="${prefix}table">
+        <inertial>
+            <origin
+                xyz="0.58720772460243 0.388900141199842 0.490800589736404"
+                rpy="0 0 0" />
+            <mass value="60.6693726504298" />
+            <inertia
+                ixx="3.77371524102152"
+                ixy="-2.15233717981711E-06"
+                ixz="1.41019174336732E-05"
+                iyy="3.15381954330578"
+                iyz="3.49890771611516E-06"
+                izz="5.02854369223315" />
+        </inertial>
+         <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/base_link.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/base_link.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Plank link -->
+    <link name="${prefix}plank">
+        <inertial>
+            <origin
+                xyz="8.88178419700125E-16 -3.33066907387547E-16 1.66533453693773E-16"
+                rpy="0 0 0" />
+            <mass
+                value="0.0427500000000023" />
+            <inertia
+                ixx="0.000180355125000009"
+                ixy="-4.37069000783219E-19"
+                ixz="-2.37169225231204E-20"
+                iyy="0.000128609812500007"
+                iyz="2.03287907341032E-20"
+                izz="0.000308957812500016" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/platna.STL" scale="0.5 0.5 0.5"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/platna.STL"  scale="0.5 0.5 0.5"/>
+            </geometry>
+        </collision>
+    </link>
+    <!-- Human link-->
+    <link name="${prefix}human">
+        <inertial>
+            <origin
+                xyz="0.0636562985646543 -0.624315521915727 0.153505181138772"
+                rpy="0 0 0" />
+            <mass value="57.2427707030152" />
+            <inertia
+                ixx="0.681065109341263"
+                ixy="-0.001884987647627"
+                ixz="0.168591205442556"
+                iyy="4.3565738682093"
+                iyz="0.00109386239097342"
+                izz="4.4877573123083" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/human.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 0.35" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/human.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Joystick link -->
+    <link name="${prefix}joystick">
+        <inertial>
+            <origin
+                xyz="1.03054842750564 -0.630954037714874 0.0526887403172666"
+                rpy="0 0 0" />
+            <mass value="0.924593219445117" />
+            <inertia
+                ixx="0.00165143506569086"
+                ixy="8.5842154108162E-06"
+                ixz="2.41183019522503E-05"
+                iyy="0.00177273307806896"
+                iyz="-0.000126679937890697"
+                izz="0.00224381014651975" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/joy.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/joy.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Monitor 1 link -->
+    <link name="${prefix}monitor_1">
+        <inertial>
+            <origin
+                xyz="0.829999073100129 -0.334362934180932 0.430904161550105"
+                rpy="0 0 0" />
+            <mass value="6.39144524647624" />
+            <inertia
+                ixx="0.0464763269335204"
+                ixy="-7.29721706654168E-08"
+                ixz="-1.36031007195482E-07"
+                iyy="0.18232787596768"
+                iyz="-0.000165655275498611"
+                izz="0.139136419220106" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/mon1.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.38 0.38 0.38 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/mon1.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- Monitor 2 link -->
+    <link name="${prefix}monitor_2">
+        <inertial>
+            <origin
+                xyz="1.44999907312388 -0.334362934180623 0.430904161562211"
+                rpy="0 0 0" />
+            <mass value="6.39144524629168" />
+            <inertia
+                ixx="0.0464763269285963"
+                ixy="-7.29715348623747E-08"
+                ixz="-1.36011605113111E-07"
+                iyy="0.182327875972225"
+                iyz="-0.000165655275071116"
+                izz="0.139136419229548" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/mon2.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.38 0.38 0.38 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/mon2.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <!-- LOGO link -->
+    <link name="${prefix}logo">
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/logo.stl" scale="0.005 0.005 0.005"/>
+            </geometry>
+            <material name="">
+                <color rgba="0.0 0.21 0.58 0.8" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/logo.stl" scale="0.005 0.005 0.005"/>
+            </geometry>
+        </collision>
+    </link >
+
+    <!-- Joint between table and plank -->
+    <joint name="${prefix}table_plank_joint" type="fixed">
+        <origin 
+            xyz="0.334 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}plank" />
+        <axis xyz="1 0 0" />
+    </joint>
+    <!-- Joint between human and table -->
+    <joint name="${prefix}table_human_joint" type="fixed">
+        <origin
+            xyz="0.334 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}human" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- Joint between joystick and table -->
+    <joint name="${prefix}table_joystick_joint" type="fixed">
+        <origin
+            xyz="0.334 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}joystick" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- Joint between monitor_1 and table -->
+    <joint name="${prefix}monitor_1_joint" type="fixed">
+        <origin
+            xyz="0.334 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}monitor_1" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- Joint between monitor_2 and table -->
+    <joint name="${prefix}monitor_2_joint" type="fixed">
+        <origin
+            xyz="0.334 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}monitor_2" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- Joint between logo and table -->
+    <joint name="${prefix}logo_joint" type="fixed">
+        <origin  
+            xyz="0.75 0.0 0.4" 
+            rpy="1.57 0 0" />
+        <parent link="${prefix}table" />
+        <child link="${prefix}logo" />
+        <axis xyz="0 0 0" />
+    </joint>
+</xacro:macro>
+
+</robot>
