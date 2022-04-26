@@ -2,8 +2,9 @@
   <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
   <arg default="$(find franka_mis_description)/config/mis.rviz" name="rvizconfig"/>
 
-  <param command="$(find xacro)/xacro $(arg model)" name="franka_mis"/>
-    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/>
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+    <!-- <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/> -->
+  <node name="table_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
   <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
 </launch>

@@ -11,15 +11,17 @@
 
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="cartesian_velocity_controller"/>
   <node name="controller_spawner_stopped" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="--stopped force_controller"/>
-  <!-- <node pkg="rviz" type="rviz" output="screen" name="rviz"/>
-  <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" required="false" /> -->
 
-  <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base panda_link0 100" />
-  <node pkg="tf" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base 100" />
+  <!-- Overwrite panda description with panda_on_table description -->
+  <!-- <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+ 
+  <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base table 100" />
+  <node pkg="tf" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base 100" /> -->
 
-  <include file="$(find panda_moveit_config)/launch/move_group.launch">
+  <!-- <include file="$(find franka_mis_moveit_config)/launch/move_group.launch">
     <arg name="fake_execution" value="true" />
     <arg name="load_gripper" value="$(arg load_gripper)" />
     <arg name="info" value="true" />
-  </include>
+  </include> -->
 </launch>

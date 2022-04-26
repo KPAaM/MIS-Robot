@@ -3,16 +3,17 @@
     <xacro:arg name="arm_id" default="panda" />
 
     <xacro:include filename="$(find franka_mis_description)/urdf/table_mis_macro.xacro"/>
+    <xacro:table_mis prefix=""/>
 
     <!-- <xacro:include filename="$(find franka_description)/robots/utils.xacro"/>
     <xacro:include filename="$(find franka_description)/robots/panda_arm.xacro"/>
 
     <xacro:panda_arm arm_id="$(arg arm_id)" safety_distance="0.03"/>
-    <xacro:table_mis prefix=""/> -->
+    
     
     <joint name="table_panda_joint" type="fixed">
         <origin xyz="0 0 0" rpy="0 0 -1.57" />
         <parent link="plank" />
         <child  link="$(arg arm_id)_link0" />
-    </joint>
+    </joint> -->
 </robot>

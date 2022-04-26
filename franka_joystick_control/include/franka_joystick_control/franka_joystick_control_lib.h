@@ -38,6 +38,7 @@ class FrankaJoystickControl
     struct JoystickControlCmd
     {
       double EEF_x_cmd = 0.0;             // offset of EEF in its x axis
+      int EEF_x_cmd_direction = 0.0;
       bool error_recovery = false;        // button for error_recovery msg
       bool error_recovery_flag = false;   // flag for being pressed
       int change_mode = 0;                //
@@ -57,7 +58,7 @@ class FrankaJoystickControl
 
   private:
     const int _NUM_OF_JOINTS = 7;
-    const double _EEF_INCREMENT = 0.05;
+    const double _EEF_INCREMENT = 0.02;
 
     ros::Publisher _cartesian_goal_publisher;             // publisher for cartesian velocity commands
     ros::Publisher _franka_error_recovery_publisher;      // publisher for error recovery message

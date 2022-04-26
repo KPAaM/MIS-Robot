@@ -29,8 +29,19 @@ FrankaJoystickControl::FrankaJoystickControl(ros::NodeHandle *nh)
 void FrankaJoystickControl::joystickCallback(const joystick_msgs::Joystick::ConstPtr &msg)
 {
   joystick_cmd.EEF_x_cmd  = _EEF_INCREMENT*(-msg->axis_2/32767);
-  CreateGoalFrame(joystick_cmd.EEF_x_cmd);
-
+  // if (joystick_cmd.EEF_x_cmd > 0)
+  // {
+  //   joystick_cmd.EEF_x_cmd_direction = 1;
+  // }
+  // else if (joystick_cmd.EEF_x_cmd < 0)
+  // {
+  //   joystick_cmd.EEF_x_cmd_direction = -1;
+  // }
+  // else
+  // {
+  //   joystick_cmd.EEF_x_cmd_direction = 0;
+  // }
+  
   // If statement to avoid multiple recovery requests
   if (!joystick_cmd.error_recovery) joystick_cmd.error_recovery = msg->button_3;
 
