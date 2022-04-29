@@ -3,14 +3,6 @@
 
 #include <ros/ros.h>
 
-#include <tf2/LinearMath/Quaternion.h>
-#include <tf2_ros/transform_broadcaster.h>
-#include <tf2_ros/transform_listener.h>
-
-#include <moveit/move_group_interface/move_group_interface.h>
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
-#include <moveit/robot_model_loader/robot_model_loader.h>
-
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <geometry_msgs/Pose.h>
@@ -21,26 +13,29 @@
 
 #include <joystick_msgs/Joystick.h>
 
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+#include <math.h>
+#include <sensor_msgs/JointState.h>
 
 class FrankaJoystickControl
 {
   public:
     FrankaJoystickControl(ros::NodeHandle *nh);
-
     void joystickCallback(const joystick_msgs::Joystick::ConstPtr &msg);
     void SendCartesianVelocityCommand(const geometry_msgs::Twist cartesian_velocity_command);
-    geometry_msgs::Pose GetCurrentState();
     void ErrorRecovery();
     void ChangeController(const std::string start_controller,
                           const std::string stop_controller);
-    void CreateGoalFrame(const double offset);
+
+    // Kinematics
+    void FrankaStateCallback(const sensor_msgs::JointState &msg);
+    Eigen::Matrix4d DH_matrix(const double a, const double d, const double alpha, const double theta);
 
     struct JoystickControlCmd
     {
       double EEF_x_cmd = 0.0;             // offset of EEF in its x axis
-      int EEF_x_cmd_direction = 0.0;
       bool error_recovery = false;        // button for error_recovery msg
-      bool error_recovery_flag = false;   // flag for being pressed
       int change_mode = 0;                //
       bool change_mode_flag = false;      // flag for being pressed
     };
@@ -55,6 +50,8 @@ class FrankaJoystickControl
     bool collaborative_mode_flag = false;
     JoystickControlCmd joystick_cmd;
 
+    // Kinematics variable
+    Eigen::Matrix4d X_base_eef;
 
   private:
     const int _NUM_OF_JOINTS = 7;
@@ -64,18 +61,8 @@ class FrankaJoystickControl
     ros::Publisher _franka_error_recovery_publisher;      // publisher for error recovery message
     ros::ServiceClient _switch_controller_service;        // ros service for switching between trajectory controller and force control
 
-    // Moveit
-    moveit::planning_interface::MoveGroupInterface _group;
-    robot_model_loader::RobotModelLoader _robot_model_loader;
-    robot_model::RobotModelPtr _robot_model_ptr;
-    robot_state::RobotStatePtr _goal_state_ptr;
-    const robot_state::JointModelGroup* _joint_model_group;
-
-    // TF2 listener for goal_frame
-    tf2_ros::Buffer _tfBuffer;
-    tf2_ros::TransformListener _tfListener;
-
     int ButtonClickFunction(const bool &BUTTON, bool &button_flag);
+
 };
 
 #endif // FRANKA_JOYSTICK_CONTROL_LIB_H

@@ -1,27 +1,33 @@
 <?xml version="1.0" ?>
 <launch>
   <arg name="robot_ip" default="172.16.0.2"/>
+  <arg name="arm_id" default="panda" />
   <arg name="load_gripper" default="false" />
-  <include file="$(find franka_control)/launch/franka_control.launch" >
-    <arg name="robot_ip" value="$(arg robot_ip)" />
-    <arg name="load_gripper" value="$(arg load_gripper)" />
-  </include>
+
+  <!-- <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper) arm_id:=$(arg arm_id)" /> -->
+  <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_table" args="0 0 0 0 0 0 1 base table" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base" /> 
+
+  <node name="franka_control" pkg="franka_control" type="franka_control_node" output="screen" required="true">
+    <rosparam command="load" file="$(find franka_control)/config/franka_control_node.yaml" subst_value="true" />
+    <param name="robot_ip" value="$(arg robot_ip)" />
+  </node>
+
+  <rosparam command="load" file="$(find franka_control)/config/default_controllers.yaml" subst_value="true" />
+  <node name="state_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="franka_state_controller"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+  <node name="joint_state_publisher" type="joint_state_publisher" pkg="joint_state_publisher" output="screen">
+    <rosparam if="$(arg load_gripper)" param="source_list">[franka_state_controller/joint_states, franka_gripper/joint_states] </rosparam>
+    <rosparam unless="$(arg load_gripper)" param="source_list">[franka_state_controller/joint_states] </rosparam>
+    <param name="rate" value="100"/>
+  </node>
 
   <rosparam command="load" file="$(find franka_mis_controllers)/config/franka_mis_controllers.yaml" />
 
   <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"  args="cartesian_velocity_controller"/>
   <node name="controller_spawner_stopped" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="--stopped force_controller"/>
 
-  <!-- Overwrite panda description with panda_on_table description -->
-  <!-- <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
-  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
- 
-  <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base table 100" />
-  <node pkg="tf" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base 100" /> -->
-
-  <!-- <include file="$(find franka_mis_moveit_config)/launch/move_group.launch">
-    <arg name="fake_execution" value="true" />
-    <arg name="load_gripper" value="$(arg load_gripper)" />
-    <arg name="info" value="true" />
-  </include> -->
 </launch>

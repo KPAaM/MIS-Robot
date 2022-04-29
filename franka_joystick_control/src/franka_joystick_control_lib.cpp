@@ -7,18 +7,10 @@
 /// \param nh ros::NodeHandle pointer
 ///////////////////////////////////////////////////////////////////////
 FrankaJoystickControl::FrankaJoystickControl(ros::NodeHandle *nh)
-  : _group("panda_arm"),
-    _robot_model_loader("robot_description"),
-    _goal_state_ptr(_group.getCurrentState()),
-    _tfListener(_tfBuffer)
 {
   _cartesian_goal_publisher = nh->advertise<geometry_msgs::Twist>("/joystick_cartesian_goal", 1);
   _franka_error_recovery_publisher = nh->advertise<franka_msgs::ErrorRecoveryActionGoal>("/franka_control/error_recovery/goal", 1);
   _switch_controller_service = nh->serviceClient<controller_manager_msgs::SwitchController>("/controller_manager/switch_controller");
-
-  // Moveit initialization
-  _robot_model_ptr = _robot_model_loader.getModel();
-  _joint_model_group = _robot_model_ptr->getJointModelGroup(_group.getName());
 }
 
 
@@ -28,24 +20,9 @@ FrankaJoystickControl::FrankaJoystickControl(ros::NodeHandle *nh)
 ///////////////////////////////////////////////////////////////////////
 void FrankaJoystickControl::joystickCallback(const joystick_msgs::Joystick::ConstPtr &msg)
 {
-  joystick_cmd.EEF_x_cmd  = _EEF_INCREMENT*(-msg->axis_2/32767);
-  // if (joystick_cmd.EEF_x_cmd > 0)
-  // {
-  //   joystick_cmd.EEF_x_cmd_direction = 1;
-  // }
-  // else if (joystick_cmd.EEF_x_cmd < 0)
-  // {
-  //   joystick_cmd.EEF_x_cmd_direction = -1;
-  // }
-  // else
-  // {
-  //   joystick_cmd.EEF_x_cmd_direction = 0;
-  // }
-  
-  // If statement to avoid multiple recovery requests
-  if (!joystick_cmd.error_recovery) joystick_cmd.error_recovery = msg->button_3;
+  joystick_cmd.EEF_x_cmd  = (-msg->axis_2/32767);
+  joystick_cmd.error_recovery = msg->button_3;
 
-  //ButtonClickFunction(msg->button_3, joystick_cmd.error_recovery_flag);
   if (ButtonClickFunction(msg->button_1, joystick_cmd.change_mode_flag) == 1)
   {
     if(joystick_cmd.change_mode == 1)
@@ -57,35 +34,6 @@ void FrankaJoystickControl::joystickCallback(const joystick_msgs::Joystick::Cons
       joystick_cmd.change_mode = 1;
     }
   }
-}
-
-///////////////////////////////////////////////////////////////////////
-/// \brief FrankaJoystickControl::CreateGoalFrame Create a goal frame with respect to EEF
-/// \param offset Offset in z axis of the EEF
-///////////////////////////////////////////////////////////////////////
-void FrankaJoystickControl::CreateGoalFrame(const double offset)
-{
-  // Create goal frame
-  geometry_msgs::TransformStamped transformStamped;
-  transformStamped.header.frame_id = "panda_link8";
-  transformStamped.child_frame_id = "goal";
-  transformStamped.header.stamp = ros::Time::now();
-  transformStamped.transform.translation.z = offset;        // move only in z axis of the EEF
-  transformStamped.transform.rotation.w = 1.0;              // keep fixed orientation
-  // Send frame to tf
-  static tf2_ros::TransformBroadcaster br;
-  br.sendTransform(transformStamped);
-}
-
-
-///////////////////////////////////////////////////////////////////////
-/// \brief FrankaJoystickControl::GetCurrentState Return a current state of the robot.
-/// \return Returns current position of the robot EEF
-///////////////////////////////////////////////////////////////////////
-geometry_msgs::Pose FrankaJoystickControl::GetCurrentState()
-{
-  geometry_msgs::Pose current_pose = _group.getCurrentPose().pose;
-  return current_pose;
 }
 
 
@@ -152,3 +100,41 @@ int FrankaJoystickControl::ButtonClickFunction(const bool &BUTTON, bool &button_
   }
   return 0;
 }
+
+
+///////////////////////////////////////////////////////////////////////
+/// \brief FrankaJoystickControl::FrankaStateCallback Callback function of FrankaStateController that computes FK after receiving new joints
+/// \param msg Joint state message from publisher "/franka_state_controller/joint_states"
+///////////////////////////////////////////////////////////////////////
+void FrankaJoystickControl::FrankaStateCallback(const sensor_msgs::JointState &msg)
+{
+  auto T1 = DH_matrix(0,          0.333,      0,            msg.position[0]);
+  auto T2 = DH_matrix(0,          0,          -M_PI_2,      msg.position[1]);
+  auto T3 = DH_matrix(0,          0.316,      M_PI_2,       msg.position[2]);
+  auto T4 = DH_matrix(0.0825,     0,          M_PI_2,       msg.position[3]);
+  auto T5 = DH_matrix(-0.0825,    0.384,      -M_PI_2,      msg.position[4]);
+  auto T6 = DH_matrix(0,          0,          M_PI_2,       msg.position[5]);
+  auto T7 = DH_matrix(0.088,      0,          M_PI_2,       msg.position[6]);
+  auto T8 = DH_matrix(0,          0.107,      0,            0);
+  X_base_eef = T1*T2*T3*T4*T5*T6*T7*T8;
+}
+
+///////////////////////////////////////////////////////////////////////
+/// \brief FrankaJoystickControl::DH_matrix Function for computing transformation matrix according to DH
+/// \param a Distance between z_{i-1} and z_{i}
+/// \param d Distance between x_{i-1} and x_{i}
+/// \param alpha Angle between z_{i-1} and z_{i}
+/// \param theta Joint angle
+///////////////////////////////////////////////////////////////////////
+Eigen::Matrix4d FrankaJoystickControl::DH_matrix(const double a, const double d, const double alpha, const double theta)
+{
+  Eigen::MatrixXd T(4,4); 
+  double sin_alpha = sin(alpha), cos_alpha = cos(alpha);
+  double sin_theta = sin(theta), cos_theta = cos(theta);
+  T << cos_theta,              -sin_theta,                   0,                a,
+       sin_theta*cos_alpha,    cos_theta*cos_alpha,          -sin_alpha,       -sin_alpha*d,
+       sin_theta*sin_alpha,    cos_theta*sin_alpha,          cos_alpha,        cos_alpha*d,
+       0,                      0,                            0,                1;
+  return T;
+}
+

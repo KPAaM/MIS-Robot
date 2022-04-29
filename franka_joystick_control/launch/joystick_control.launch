@@ -1,26 +1,8 @@
 <?xml version="1.0" ?>
 <launch>
-    <arg name="robot_ip" default="172.16.0.2"/>
-    <arg name="load_gripper" default="false" />
-
-    <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
-    <param command="$(find xacro)/xacro $(arg model)" name="mis"/>
-    
-    <node pkg="tf" type="static_transform_publisher" name="table_to_link0" args="0 0 0 0 0 0.707 -0.707 plank panda_link0 100" />
-    <node pkg="tf" type="static_transform_publisher" name="base_to_link0" args="0 0 0 0 0 0 1 base table 100" />
-    <node pkg="tf" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base 100" /> -->
-
-    <include file="$(find panda_moveit_config)/launch/move_group.launch">
-        <arg name="fake_execution" value="true" />
-        <arg name="load_gripper" value="$(arg load_gripper)" />
-        <arg name="info" value="true" />
-    </include>
-
     <node name="joystick_publisher" pkg="franka_joystick_control" type="joystick_publisher" output="screen" />
     <node name="franka_joystick_control" pkg="franka_joystick_control" type="franka_joystick_control" output="screen" />
-    <node name="table_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-        <remap from="robot_description" to="mis" />
-        <remap from="joint_states" to="mis_joint_states" />
-    </node>
 
+    <arg default="$(find franka_mis_description)/config/mis.rviz" name="rvizconfig"/>
+    <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
 </launch>
