@@ -235,6 +235,41 @@
             </geometry>
         </collision>
     </link >
+    <link name="${prefix}MonitorStand">
+        <inertial>
+            <origin
+                xyz="1.0873569385419 -0.287608682837037 0.360648144052715"
+                rpy="0 0 0" />
+            <mass value="1.40760668777617" />
+            <inertia
+                ixx="0.00578762787680281"
+                ixy="-3.20383235711662E-07"
+                ixz="-3.59128173184863E-09"
+                iyy="0.00632232143331546"
+                iyz="-2.42478617290694E-06"
+                izz="0.0034887576377844" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://franka_mis_description/meshes/MonitorStand.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.643137254901961 0.615686274509804 0.6 1" />
+            </material>
+        </visual>
+        <collision>
+        <origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+        <geometry>
+            <mesh filename="package://franka_mis_description/meshes/MonitorStand.STL" />
+        </geometry>
+        </collision>
+    </link>
 
     <!-- Joint between table and plank -->
     <joint name="${prefix}table_plank_joint" type="fixed">
@@ -288,6 +323,15 @@
             rpy="1.57 0 0" />
         <parent link="${prefix}table" />
         <child link="${prefix}logo" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <!-- Joint between stand and monitors -->
+    <joint name="${prefix}MonitorStand_joint" type="fixed">
+        <origin
+            xyz="0.35137 0.749 0.8205"
+            rpy="0 0 0" />
+        <parent link="${prefix}base_link" />
+        <child link="${prefix}MonitorStand" />
         <axis xyz="0 0 0" />
     </joint>
 </xacro:macro>
