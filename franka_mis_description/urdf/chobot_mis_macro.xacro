@@ -1,0 +1,218 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+
+<xacro:macro name="chobot_mis" params="prefix">
+    <link name="${prefix}chobot_base">
+        <inertial>
+            <origin
+                xyz="-3.5437E-07 -2.4225E-08 0.026166"
+                rpy="0 0 0" />
+            <mass value="0.16865" />
+            <inertia
+                ixx="0.00019609"
+                ixy="-6.5245E-11"
+                ixz="1.2106E-10"
+                iyy="0.00019609"
+                iyz="2.4619E-11"
+                izz="0.00036212" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_base.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.50196 0.50196 0.50196 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_base.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${prefix}chobot_cover">
+        <inertial>
+            <origin
+                xyz="-0.0022698 0.0066871 -0.044281"
+                rpy="0 0 0" />
+            <mass value="0.031916" />
+            <inertia
+                ixx="7.5467E-05"
+                ixy="4.1245E-06"
+                ixz="-4.6472E-07"
+                iyy="6.518E-05"
+                iyz="2.6843E-07"
+                izz="8.8933E-05" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_cover.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_cover.STL" />
+            </geometry>
+        </collision>
+    </link>
+  
+    <link name="${prefix}chobot_disk">
+        <inertial>
+        <origin
+            xyz="-8.6869E-07 -0.003128 -7.3309E-10"
+            rpy="0 0 0" />
+        <mass value="0.011775" />
+        <inertia
+            ixx="3.1946E-06"
+            ixy="-2.9524E-14"
+            ixz="1.7156E-13"
+            iyy="6.3187E-06"
+            iyz="7.4259E-14"
+            izz="3.1946E-06" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_disk.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.75294 0.75294 0.75294 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_disk.STL" />
+            </geometry>
+        </collision>
+    </link>
+  
+    <link name="${prefix}chobot_chobot">
+        <inertial>
+            <origin
+                xyz="-7.491E-07 0.090146 -1.7142E-06"
+                rpy="0 0 0" />
+            <mass value="0.026853" />
+            <inertia
+                ixx="3.4916E-05"
+                ixy="-2.6632E-12"
+                ixz="-5.3093E-14"
+                iyy="2.0277E-06"
+                iyz="-1.9686E-09"
+                izz="3.4915E-05" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_chobot.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="1 1 1 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_chobot.STL" />
+            </geometry>
+        </collision>
+    </link>
+  
+    <link name="${prefix}chobot_camera">
+        <inertial>
+            <origin
+                xyz="-7.3491E-19 1.7052E-19 -0.020523"
+                rpy="0 0 0" />
+            <mass value="0.001805" />
+            <inertia
+                ixx="1.0588E-06"
+                ixy="5.3028E-26"
+                ixz="-6.6316E-23"
+                iyy="1.0588E-06"
+                iyz="1.5885E-23"
+                izz="6.902E-09" />
+        </inertial>
+        <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_camera.STL" />
+            </geometry>
+            <material name="">
+                <color rgba="0.50196 0.50196 0.50196 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://franka_mis_description/meshes/chobot_camera.STL" />
+            </geometry>
+        </collision>
+  </link>
+
+
+
+
+    <joint name="${prefix}cover_joint" type="fixed">
+        <origin
+            xyz="0 0 0.052"
+            rpy="3.1416 0 0.52353" />
+        <parent link="${prefix}chobot_base" />
+        <child link="${prefix}chobot_cover" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <joint name="${prefix}disk_joint" type="fixed"> 
+        <origin
+            xyz="0 0 -0.106"
+            rpy="-1.5708 0 0.52358" />
+        <parent link="${prefix}chobot_cover" />
+        <child link="${prefix}chobot_disk" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <joint name="${prefix}chobot_chobot_joint" type="fixed">
+        <origin
+            xyz="0 0.006 0"
+            rpy="0 0.5236 0" />
+        <parent link="${prefix}chobot_disk" />
+        <child link="${prefix}chobot_chobot" />
+        <axis xyz="0 0 0" />
+    </joint>
+    <joint name="${prefix}camera_joint" type="fixed">
+        <origin
+            xyz="0 0.27726 0"
+            rpy="-1.5708 -0.52354 0" />
+        <parent link="${prefix}chobot_chobot" />
+        <child link="${prefix}chobot_camera" />
+        <axis xyz="0 0 0" />
+    </joint>
+
+</xacro:macro>
+
+</robot>
