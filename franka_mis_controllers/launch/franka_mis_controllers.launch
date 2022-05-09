@@ -5,11 +5,11 @@
   <arg name="load_gripper" default="false" />
 
   <!-- <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda_arm.urdf.xacro hand:=$(arg load_gripper) arm_id:=$(arg arm_id)" /> -->
-  <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
+<!--  <arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
   <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="base_to_table" args="0 0 0 0 0 0 1 base table" />
-  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base" /> 
+  <node pkg="tf2_ros" type="static_transform_publisher" name="world_to_base" args="0 0 0 0 0 0 1 world base" /> -->
 
   <node name="franka_control" pkg="franka_control" type="franka_control_node" output="screen" required="true">
     <rosparam command="load" file="$(find franka_control)/config/franka_control_node.yaml" subst_value="true" />

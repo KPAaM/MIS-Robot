@@ -3,6 +3,9 @@
     <node name="joystick_publisher" pkg="franka_joystick_control" type="joystick_publisher" output="screen" />
     <node name="franka_joystick_control" pkg="franka_joystick_control" type="franka_joystick_control" output="screen" />
 
+	<arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
+  <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
+	 <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
     <arg default="$(find franka_mis_description)/config/mis.rviz" name="rvizconfig"/>
     <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
 </launch>

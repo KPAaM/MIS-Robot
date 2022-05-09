@@ -330,7 +330,7 @@
         <origin
             xyz="0.35137 0.749 0.8205"
             rpy="0 0 0" />
-        <parent link="${prefix}base_link" />
+        <parent link="${prefix}table" />
         <child link="${prefix}MonitorStand" />
         <axis xyz="0 0 0" />
     </joint>

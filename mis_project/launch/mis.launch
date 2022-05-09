@@ -1,0 +1,4 @@
+<launch>
+  <node name="joystick_publisher" pkg="franka_joystick_control" type="joystick_publisher" output="screen"/>
+  <node name="sync_set_position" pkg="dynamixel_sdk_examples" type="sync_read_write_velocity_node" output="screen"/>
+</launch>
