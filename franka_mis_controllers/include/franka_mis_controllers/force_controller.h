@@ -39,7 +39,7 @@ class ForceController : public controller_interface::MultiInterfaceController<
   std::unique_ptr<franka_hw::FrankaStateHandle> state_handle_;
   std::vector<hardware_interface::JointHandle> joint_handles_;
 
-  double desired_mass_{0.610};
+  double desired_mass_{-0.610};
   double target_mass_{0.0};
   double k_p_{0.0};
   double k_i_{0.0};

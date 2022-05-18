@@ -83,14 +83,14 @@
          </property>
          <property name="styleSheet">
           <string notr="true">margin-left: 25px;
-margin-bottom: 10px;
+margin-bottom: 2px;
 </string>
          </property>
          <property name="text">
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../../../../../../../run/user/1000/doc/c2dda90b/no1_logo3.png</pixmap>
+          <pixmap>../../../../../../../../run/user/1000/doc/ec7d2e57/no1_logo3.png</pixmap>
          </property>
         </widget>
        </item>
@@ -118,7 +118,7 @@ margin-bottom: 10px;
            <string notr="true">color:rgb(255, 255, 255)</string>
           </property>
           <property name="text">
-           <string>Technical Universirty of Kosice</string>
+           <string>Technical University of Kosice</string>
           </property>
          </widget>
          <widget class="QLabel" name="label_3">
@@ -164,8 +164,11 @@ margin-bottom: 10px;
         <widget class="QTabWidget" name="tabWidget">
          <property name="font">
           <font>
-           <pointsize>18</pointsize>
+           <pointsize>14</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color:rgb(255, 255, 255);</string>
          </property>
          <property name="tabPosition">
           <enum>QTabWidget::North</enum>
@@ -185,7 +188,7 @@ margin-bottom: 10px;
          <widget class="QWidget" name="tab">
           <attribute name="icon">
            <iconset>
-            <normalon>../../../../../../../run/user/1000/doc/e8349ffb/robot.png</normalon>
+            <normalon>../../../../../../../../run/user/1000/doc/ec6ee6c5/robot.png</normalon>
            </iconset>
           </attribute>
           <attribute name="title">
@@ -217,6 +220,7 @@ margin-bottom: 10px;
 	background-color:rgb(255, 255, 255);
 	border-radius: 10px;
 	border: 1px solid rgb(0, 0, 90);
+	margin-top:20px;
 }
 </string>
              </property>
@@ -235,20 +239,6 @@ margin-bottom: 10px;
              <layout class="QHBoxLayout" name="horizontalLayout_3">
               <item>
                <layout class="QVBoxLayout" name="verticalLayout_5">
-                <item>
-                 <widget class="QLabel" name="label_9">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QLabel" name="label_11">
-                  <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
                 <item>
                  <layout class="QHBoxLayout" name="horizontalLayout_4">
                   <item>
@@ -272,13 +262,6 @@ margin-bottom: 10px;
                        </property>
                        <layout class="QVBoxLayout" name="verticalLayout_7">
                         <item>
-                         <widget class="QLabel" name="label_15">
-                          <property name="text">
-                           <string/>
-                          </property>
-                         </widget>
-                        </item>
-                        <item>
                          <widget class="QPushButton" name="pushButton">
                           <property name="minimumSize">
                            <size>
@@ -288,7 +271,7 @@ margin-bottom: 10px;
                           </property>
                           <property name="font">
                            <font>
-                            <pointsize>14</pointsize>
+                            <pointsize>12</pointsize>
                            </font>
                           </property>
                           <property name="text">
@@ -297,45 +280,15 @@ margin-bottom: 10px;
                          </widget>
                         </item>
                         <item>
-                         <widget class="QWidget" name="widget_6" native="true">
-                          <layout class="QVBoxLayout" name="verticalLayout_10">
-                           <item>
-                            <widget class="QLabel" name="label_32">
-                             <property name="font">
-                              <font>
-                               <pointsize>30</pointsize>
-                              </font>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
-                           <item>
-                            <widget class="QPushButton" name="pushButton_2">
-                             <property name="font">
-                              <font>
-                               <pointsize>14</pointsize>
-                              </font>
-                             </property>
-                             <property name="text">
-                              <string>Camera</string>
-                             </property>
-                            </widget>
-                           </item>
-                           <item>
-                            <widget class="QLabel" name="label_19">
-                             <property name="font">
-                              <font>
-                               <pointsize>30</pointsize>
-                              </font>
-                             </property>
-                             <property name="text">
-                              <string/>
-                             </property>
-                            </widget>
-                           </item>
-                          </layout>
+                         <widget class="QPushButton" name="pushButton_2">
+                          <property name="font">
+                           <font>
+                            <pointsize>12</pointsize>
+                           </font>
+                          </property>
+                          <property name="text">
+                           <string>Camera</string>
+                          </property>
                          </widget>
                         </item>
                         <item>
@@ -345,7 +298,7 @@ margin-bottom: 10px;
                             <widget class="QLabel" name="label_16">
                              <property name="font">
                               <font>
-                               <pointsize>14</pointsize>
+                               <pointsize>12</pointsize>
                               </font>
                              </property>
                              <property name="text">
@@ -362,42 +315,13 @@ margin-bottom: 10px;
                               <number>1</number>
                              </property>
                              <property name="maximum">
-                              <number>20</number>
+                              <number>50</number>
                              </property>
                              <property name="value">
-                              <number>5</number>
+                              <number>4</number>
                              </property>
                              <property name="orientation">
                               <enum>Qt::Horizontal</enum>
-                             </property>
-                            </widget>
-                           </item>
-                          </layout>
-                         </widget>
-                        </item>
-                        <item>
-                         <widget class="QWidget" name="widget_7" native="true">
-                          <property name="sizeIncrement">
-                           <size>
-                            <width>0</width>
-                            <height>0</height>
-                           </size>
-                          </property>
-                          <property name="font">
-                           <font>
-                            <pointsize>25</pointsize>
-                           </font>
-                          </property>
-                          <layout class="QVBoxLayout" name="verticalLayout_11">
-                           <item>
-                            <widget class="QLabel" name="label_20">
-                             <property name="font">
-                              <font>
-                               <pointsize>25</pointsize>
-                              </font>
-                             </property>
-                             <property name="text">
-                              <string/>
                              </property>
                             </widget>
                            </item>
@@ -411,7 +335,7 @@ margin-bottom: 10px;
                             <widget class="QLabel" name="label_17">
                              <property name="font">
                               <font>
-                               <pointsize>14</pointsize>
+                               <pointsize>12</pointsize>
                               </font>
                              </property>
                              <property name="text">
@@ -426,7 +350,7 @@ margin-bottom: 10px;
                             <widget class="QLabel" name="label_18">
                              <property name="font">
                               <font>
-                               <pointsize>14</pointsize>
+                               <pointsize>12</pointsize>
                                <bold>false</bold>
                               </font>
                              </property>
@@ -462,7 +386,7 @@ margin-bottom: 10px;
                            <string/>
                           </property>
                           <property name="pixmap">
-                           <pixmap>../../../../../../../run/user/1000/doc/84ccf69/panda.png</pixmap>
+                           <pixmap>../../../../../../../../run/user/1000/doc/d8cdda4d/panda.png</pixmap>
                           </property>
                           <property name="alignment">
                            <set>Qt::AlignCenter</set>
@@ -491,7 +415,7 @@ margin-bottom: 10px;
                        <item>
                         <widget class="QWidget" name="widget_8" native="true">
                          <property name="sizePolicy">
-                          <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                            <horstretch>0</horstretch>
                            <verstretch>0</verstretch>
                           </sizepolicy>
@@ -499,6 +423,12 @@ margin-bottom: 10px;
                          <layout class="QVBoxLayout" name="verticalLayout_12">
                           <item>
                            <widget class="QLabel" name="label_21">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <property name="font">
                              <font>
                               <pointsize>14</pointsize>
@@ -514,18 +444,71 @@ margin-bottom: 10px;
                            </widget>
                           </item>
                           <item>
+                           <widget class="QPushButton" name="pushButton_9">
+                            <property name="font">
+                             <font>
+                              <pointsize>12</pointsize>
+                             </font>
+                            </property>
+                            <property name="text">
+                             <string>Motors OFF</string>
+                            </property>
+                           </widget>
+                          </item>
+                          <item>
                            <widget class="QWidget" name="widget_11" native="true">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <layout class="QGridLayout" name="gridLayout_3">
-                             <item row="2" column="0">
-                              <widget class="QLabel" name="label_26">
+                             <item row="0" column="3">
+                              <widget class="QPushButton" name="pushButton_4">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
-                                 <bold>false</bold>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>Motor no. 3</string>
+                                <string>Stop</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item row="2" column="3">
+                              <widget class="QPushButton" name="pushButton_8">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Stop</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item row="1" column="1">
+                              <widget class="QPushButton" name="pushButton_5">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Winding</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item row="0" column="1">
+                              <widget class="QPushButton" name="pushButton_3">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Winding</string>
                                </property>
                               </widget>
                              </item>
@@ -533,7 +516,7 @@ margin-bottom: 10px;
                               <widget class="QLabel" name="label_25">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                  <bold>false</bold>
                                 </font>
                                </property>
@@ -542,11 +525,23 @@ margin-bottom: 10px;
                                </property>
                               </widget>
                              </item>
+                             <item row="2" column="1">
+                              <widget class="QPushButton" name="pushButton_7">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Winding</string>
+                               </property>
+                              </widget>
+                             </item>
                              <item row="0" column="0">
                               <widget class="QLabel" name="label_24">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                  <bold>false</bold>
                                 </font>
                                </property>
@@ -555,48 +550,64 @@ margin-bottom: 10px;
                                </property>
                               </widget>
                              </item>
-                             <item row="0" column="1">
-                              <widget class="QLabel" name="label_27">
+                             <item row="2" column="0">
+                              <widget class="QLabel" name="label_26">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
+                                 <bold>false</bold>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>Unwinding</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
+                                <string>Motor no. 3</string>
                                </property>
                               </widget>
                              </item>
-                             <item row="1" column="1">
-                              <widget class="QLabel" name="label_28">
+                             <item row="1" column="3">
+                              <widget class="QPushButton" name="pushButton_6">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="text">
-                                <string>Unwinding</string>
-                               </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
+                                <string>Stop</string>
                                </property>
                               </widget>
                              </item>
-                             <item row="2" column="1">
-                              <widget class="QLabel" name="label_29">
+                             <item row="0" column="2">
+                              <widget class="QPushButton" name="pushButton_10">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="text">
                                 <string>Unwinding</string>
                                </property>
-                               <property name="alignment">
-                                <set>Qt::AlignCenter</set>
+                              </widget>
+                             </item>
+                             <item row="1" column="2">
+                              <widget class="QPushButton" name="pushButton_11">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Unwinding</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item row="2" column="2">
+                              <widget class="QPushButton" name="pushButton_12">
+                               <property name="font">
+                                <font>
+                                 <pointsize>12</pointsize>
+                                </font>
+                               </property>
+                               <property name="text">
+                                <string>Unwinding</string>
                                </property>
                               </widget>
                              </item>
@@ -604,25 +615,25 @@ margin-bottom: 10px;
                            </widget>
                           </item>
                           <item>
-                           <widget class="QLabel" name="label_31">
-                            <property name="font">
-                             <font>
-                              <pointsize>25</pointsize>
-                             </font>
-                            </property>
-                            <property name="text">
-                             <string/>
-                            </property>
-                           </widget>
-                          </item>
-                          <item>
                            <widget class="QWidget" name="widget_12" native="true">
+                            <property name="sizePolicy">
+                             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                              <horstretch>0</horstretch>
+                              <verstretch>0</verstretch>
+                             </sizepolicy>
+                            </property>
                             <layout class="QVBoxLayout" name="verticalLayout_13">
                              <item>
                               <widget class="QLabel" name="label_30">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="text">
@@ -635,6 +646,12 @@ margin-bottom: 10px;
                              </item>
                              <item>
                               <widget class="QSlider" name="horizontalSlider_2">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="minimum">
                                 <number>1</number>
                                </property>
@@ -687,7 +704,7 @@ margin-bottom: 10px;
                               <widget class="QLabel" name="label_23">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="layoutDirection">
@@ -705,7 +722,7 @@ margin-bottom: 10px;
                               <widget class="QLabel" name="label_22">
                                <property name="font">
                                 <font>
-                                 <pointsize>14</pointsize>
+                                 <pointsize>12</pointsize>
                                 </font>
                                </property>
                                <property name="text">
@@ -722,19 +739,35 @@ margin-bottom: 10px;
                           <item>
                            <widget class="QWidget" name="widget_13" native="true">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                             <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
                             <layout class="QHBoxLayout" name="horizontalLayout_9">
                              <item>
+                              <widget class="QLabel" name="label_19">
+                               <property name="styleSheet">
+                                <string notr="true">color:rgb(255, 255, 255);</string>
+                               </property>
+                               <property name="text">
+                                <string>s</string>
+                               </property>
+                              </widget>
+                             </item>
+                             <item>
                               <widget class="QLabel" name="label_13">
+                               <property name="sizePolicy">
+                                <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                                 <horstretch>0</horstretch>
+                                 <verstretch>0</verstretch>
+                                </sizepolicy>
+                               </property>
                                <property name="text">
                                 <string/>
                                </property>
                                <property name="pixmap">
-                                <pixmap>../../../../../../../run/user/1000/doc/c223728d/joystick0_ok.png</pixmap>
+                                <pixmap>../../../../../../../../run/user/1000/doc/c73ca855/joystick0_ok.png</pixmap>
                                </property>
                                <property name="alignment">
                                 <set>Qt::AlignCenter</set>
@@ -833,7 +866,7 @@ margin-bottom: 10px;
          <widget class="QWidget" name="tab_2">
           <attribute name="icon">
            <iconset>
-            <normalon>../../../../../../../run/user/1000/doc/e094720a/service2.png</normalon>
+            <normalon>../../../../../../../../run/user/1000/doc/b987693f/service2.png</normalon>
            </iconset>
           </attribute>
           <attribute name="title">
@@ -855,17 +888,55 @@ margin-bottom: 10px;
          <widget class="QWidget" name="tab_3">
           <attribute name="icon">
            <iconset>
-            <normalon>../../../../../../../run/user/1000/doc/10502bbb/help.png</normalon>
+            <normalon>../../../../../../../../run/user/1000/doc/c808fe54/help.png</normalon>
            </iconset>
           </attribute>
           <attribute name="title">
            <string>Help</string>
           </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_10">
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;Procedure:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;1.&lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt; Open terminal: CTRL + ALT + T&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;2. &lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;In terminal 1: &amp;quot;ssh -X km@192.16.0.1&amp;quot;, password: novzlabakkm&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;3. &lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;In terminal 1: &amp;quot;firefox&amp;quot;, breaks off, licence activation, close firefox&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;4. &lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;In terminal 1: &amp;quot;&lt;/span&gt;&lt;span style=&quot; font-family:'monospace'; font-size:14pt;&quot;&gt;roslaunch franka_mis_controllers franka_mis_controllers.launch&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-family:'monospace'; font-size:14pt; font-weight:700;&quot;&gt;5.&lt;/span&gt;&lt;span style=&quot; font-family:'monospace'; font-size:14pt;&quot;&gt; In terminal 2: &amp;quot;roslaunch franka_joystick_control joystick_control.launch&amp;quot;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_11">
+             <property name="font">
+              <font>
+               <pointsize>14</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;Camera:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;- black USB&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;- in the case of overheating: trun the camera light off&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_15">
+             <property name="font">
+              <font>
+               <pointsize>12</pointsize>
+              </font>
+             </property>
+             <property name="text">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:700;&quot;&gt;Dynamixels:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;- white USB, 230 AC&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
          <widget class="QWidget" name="tab_4">
           <attribute name="icon">
            <iconset>
-            <normalon>../../../../../../../run/user/1000/doc/50d8ccc4/about.png</normalon>
+            <normalon>../../../../../../../../run/user/1000/doc/7924b553/about.png</normalon>
            </iconset>
           </attribute>
           <attribute name="title">
@@ -876,7 +947,7 @@ margin-bottom: 10px;
             <widget class="QLabel" name="label_4">
              <property name="font">
               <font>
-               <pointsize>24</pointsize>
+               <pointsize>22</pointsize>
               </font>
              </property>
              <property name="text">
@@ -892,12 +963,12 @@ margin-bottom: 10px;
              <property name="font">
               <font>
                <family>Loma</family>
-               <pointsize>24</pointsize>
+               <pointsize>22</pointsize>
                <bold>false</bold>
               </font>
              </property>
              <property name="text">
-              <string>Monitoring bio-softrobot for minimally invasive surgeries </string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Monitoring bio-softrobot for minimally invasive surgeries &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -908,7 +979,7 @@ margin-bottom: 10px;
             <widget class="QLabel" name="label_6">
              <property name="font">
               <font>
-               <pointsize>24</pointsize>
+               <pointsize>22</pointsize>
               </font>
              </property>
              <property name="text">
@@ -923,11 +994,11 @@ margin-bottom: 10px;
             <widget class="QLabel" name="label_7">
              <property name="font">
               <font>
-               <pointsize>24</pointsize>
+               <pointsize>22</pointsize>
               </font>
              </property>
              <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;doc. Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Ivan Virgala&lt;/span&gt;, PhD. (Programming)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Martin Varga&lt;/span&gt; (Mechanical design)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Peter Ján Sinčák&lt;/span&gt; (Mechanical design)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Tomáš Merva&lt;/span&gt; (Programming)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;doc. Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Ivan Virgala&lt;/span&gt;, PhD. (Programming)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Martin Varga&lt;/span&gt; (Mechanical design)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Peter Ján Sinčák&lt;/span&gt; (Mechanical design)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Tomáš Merva&lt;/span&gt; (Programming)&lt;/p&gt;&lt;p&gt;Ing. &lt;span style=&quot; font-weight:700;&quot;&gt;Peter Marcinko&lt;/span&gt;, PhD. (Mechanical design)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -940,7 +1011,7 @@ margin-bottom: 10px;
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap>../../../../../../../run/user/1000/doc/900b4d66/sjf.png</pixmap>
+              <pixmap>../../../../../../../../run/user/1000/doc/98c0792c/sjf.png</pixmap>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

@@ -29,6 +29,7 @@ add_message_files(
     BulkSetItem.msg
     SetVelocity.msg
     SyncSetVelocity.msg
+    SetStop.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -71,6 +72,14 @@ add_executable(read_write_node src/read_write_node.cpp)
 add_dependencies(read_write_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(read_write_node ${catkin_LIBRARIES})
 
+add_executable(read_write_stop src/read_write_stop.cpp)
+add_dependencies(read_write_stop ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(read_write_stop ${catkin_LIBRARIES})
+
+add_executable(read_write_winding_node src/read_write_winding_node.cpp)
+add_dependencies(read_write_winding_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(read_write_winding_node ${catkin_LIBRARIES})
+
 add_executable(sync_read_write_node src/sync_read_write_node.cpp)
 add_dependencies(sync_read_write_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(sync_read_write_node ${catkin_LIBRARIES})
@@ -78,6 +87,10 @@ target_link_libraries(sync_read_write_node ${catkin_LIBRARIES})
 add_executable(sync_read_write_velocity_node src/sync_read_write_velocity_node.cpp)
 add_dependencies(sync_read_write_velocity_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(sync_read_write_velocity_node ${catkin_LIBRARIES})
+
+add_executable(sync_read_write_winding_node src/sync_read_write_winding_node.cpp)
+add_dependencies(sync_read_write_winding_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(sync_read_write_winding_node ${catkin_LIBRARIES})
 
 add_executable(bulk_read_write_node src/bulk_read_write_node.cpp)
 add_dependencies(bulk_read_write_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -92,6 +105,6 @@ target_link_libraries(indirect_address_node ${catkin_LIBRARIES})
 ################################################################################
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
-install(TARGETS read_write_node sync_read_write_node bulk_read_write_node indirect_address_node
+install(TARGETS read_write_node sync_read_write_node sync_read_write_winding_node read_write_stop bulk_read_write_node indirect_address_node
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

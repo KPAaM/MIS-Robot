@@ -11,20 +11,17 @@
 #include <QGridLayout>
 #include <QVBoxLayout>
 #include <QVariant>
-
 #include <QtMultimedia/QCamera>
 #include <QtMultimedia/QCameraInfo>
 #include <QtMultimedia/QCameraImageCapture>
 #include <QtMultimediaWidgets/QCameraViewfinder>
 #include <QVBoxLayout>
 #include <QAction>
-
-
+#include <franka_msgs/ErrorRecoveryActionGoal.h>
 #include <QMessageBox>
 #include <QPalette>
-
 #include <QtWidgets>
-
+#include <std_msgs/Float64.h>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -32,39 +29,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
   nh_.reset(new ros::NodeHandle("~"));
-
-  // camera
-  /*
-  mCamera = new QCamera(this);
-  mCameraViewfinder = new QCameraViewfinder(this);
-  mCameraImageCapture = new QCameraImageCapture(mCamera, this);
-  mLayout = new QVBoxLayout;
-  mCamera->setViewfinder(mCameraViewfinder);
-  mLayout->addWidget(mCameraViewfinder);
-  mLayout->setMargin(0);
-  mAction = new QAction("Kamera",this);
-  ui->widget_14->setLayout(mLayout);
-
-  connect(mAction, &QAction::triggered, [&](){
-    mCamera->start();
-  });
-*/
-
-
-  //system("gnome-terminal -e cheese");
-
-  // ================ RViz ==============
+  // ================================== RViz ==================================
   QVBoxLayout* main_layout = new QVBoxLayout;
   render_panel_ = new rviz::RenderPanel();
   manager_ = new rviz::VisualizationManager(render_panel_);
   render_panel_->initialize(manager_->getSceneManager(),manager_);
-  ui->main_layout->addWidget(render_panel_);//  main_layout->addWidget(render_panel_);
+  ui->main_layout->addWidget(render_panel_);
   manager_->initialize();
   manager_->startUpdate();
-
   manager_->removeAllDisplays();
-  manager_->setFixedFrame("panda_link0");
+  manager_->setFixedFrame("table");
   manager_->createDisplay("rviz/Path","$(find xacro)/xacro $(find panda_moveit_config)/config/panda.srdf.xacro",true);
+
   rviz::Display *map = manager_->createDisplay( "rviz/Map", "adjustable map", true );
   map->subProp( "Topic" )->setValue( "/map" );
 
@@ -72,22 +48,20 @@ MainWindow::MainWindow(QWidget *parent) :
   map->subProp( "Topic" )->setValue( "/grid" );
 
   rviz::Display *robot = manager_->createDisplay( "rviz/RobotModel", "adjustable robot", "$(find xacro)/xacro $(find panda_moveit_config)/config/panda.srdf.xacro" );
-  robot->subProp( "Robot Description" )->setValue( "robot_description" );//$(find xacro)/xacro $(find panda_moveit_config)/config/panda.srdf.xacro
-  robot->subProp( "Reference Frame" )->setValue( "base_link" );
+  robot->subProp( "Robot Description" )->setValue( "robot_description" );
+  robot->subProp( "Reference Frame" )->setValue( "table" );
 
-/*
-  rviz::Display *laser = manager_->createDisplay( "rviz/LaserScan", "adjustable scan", true );
-  laser->subProp( "Topic" )->setValue( "/scan" );
-  laser->subProp( "Size (m)" )->setValue( "0.1" );
-*/
-  // ==========================================
+  // ==========================================================================
 
   ros_timer = new QTimer(this);
   connect(ros_timer, SIGNAL(timeout()), this, SLOT(spinOnce()));
-  ros_timer->start(100);  // set the rate to 100ms  You can change this if you want to increase/decrease update rate
+  ros_timer->start(30);  // set the rate to 100ms  You can change this if you want to increase/decrease update rate
 
   joystick_sub_ = nh.subscribe<joystick_msgs::Joystick>("joystick_feedback", 10, &MainWindow::joystickCallback, this);
-
+  robot_sensitivity_ = nh.advertise<std_msgs::Float64>("robot_sensitivity",1);
+  dynamixel_vel_pub_  = nh.advertise<dynamixel_sdk_examples::SetVelocity>("/set_velocity",1);
+  dynamixel_vel_pub_zero_  = nh.advertise<dynamixel_sdk_examples::SyncSetVelocity>("/sync_set_velocity",1);
+  dynamixel_stop_ = nh.advertise<dynamixel_sdk_examples::SetStop>("/set_stop",1);
 }
 
 
@@ -118,11 +92,7 @@ void MainWindow::joystickCallback(const joystick_msgs::Joystick::ConstPtr& joy)
   MainWindow::joyRotation       = joy->axis_2;
   // ==========================================================================
 
-  //ui->joyHorizontalLabel->setText(QString::number(MainWindow::joyHorizontal));
-  //ui->joyVerticalLabel->setText(QString::number(MainWindow::joyVertical));
-
-
-  // =================== Collaborative / Teleoperation Mode ====================
+  // ================== Collaborative / Teleoperation Mode ====================
   if((MainWindow::collaborativeSwitch == false) && (MainWindow::colaborativeMode == true) && (MainWindow::colaborativeModeOld == false))
   {
     MainWindow::collaborativeSwitch = true;
@@ -143,7 +113,6 @@ void MainWindow::joystickCallback(const joystick_msgs::Joystick::ConstPtr& joy)
     MainWindow::colaborativeModeOld = false;
     MainWindow::collaborativeSwitch = false;
   }
-  //ROS_INFO("Switch: %d, Mode: %d, Old: %d",MainWindow::collaborativeSwitch, MainWindow::colaborativeMode, MainWindow::colaborativeModeOld);
   // ==========================================================================
 
   MainWindow::areaRecognition();
@@ -165,10 +134,7 @@ void MainWindow::MotorControl(int circleArea)
     MainWindow::servoVelocity[0]  = 0;
     MainWindow::servoVelocity[1]  = 0;
     MainWindow::servoVelocity[2]  = 0;
-    ui->label_27->setText(QString("Stopped"));
-    ui->label_28->setText(QString("Stopped"));
-    ui->label_29->setText(QString("Stopped"));
-    ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick0_ok.png);");
+    ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick0_ok.png);");
     ui->label_22->setText(QString::number(0,'f',2));
     if(MainWindow::zeroVelocity == false)
     {
@@ -243,7 +209,6 @@ void MainWindow::MotorControl(int circleArea)
     }
   }
   // ========================================================================================
-
 }
 
 void MainWindow::areaRecognition()
@@ -295,7 +260,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] =  1;
       MainWindow::circleArea = 1;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick1_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick1_ok.png);");
     }
     if( (MainWindow::area[0] == true ) && (MainWindow::angle<=60) && (MainWindow::angle>30) )
     {
@@ -303,7 +268,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] =  1;
       MainWindow::circleArea = 2;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick2_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick2_ok.png);");
     }
     if( (MainWindow::area[0] == true ) && (MainWindow::angle<=30) && (MainWindow::angle>0) )
     {
@@ -311,7 +276,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 3;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick3_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick3_ok.png);");
     }
     if( (MainWindow::area[1] == true ) && (MainWindow::angle<30) && (MainWindow::angle>=0) )
     {
@@ -319,7 +284,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 4;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick4_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick4_ok.png);");
     }
     if( (MainWindow::area[1] == true ) && (MainWindow::angle<60) && (MainWindow::angle>=30) )
     {
@@ -327,7 +292,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 5;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick5_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick5_ok.png);");
     }
     if( (MainWindow::area[1] == true ) && (MainWindow::angle<90) && (MainWindow::angle>=60) )
     {
@@ -335,7 +300,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 6;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick6_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick6_ok.png);");
     }
     if( (MainWindow::area[2] == true ) && (MainWindow::angle<90) && (MainWindow::angle>=60) )
     {
@@ -343,7 +308,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] =  1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 7;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick7_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick7_ok.png);");
     }
     if( (MainWindow::area[2] == true ) && (MainWindow::angle<60) && (MainWindow::angle>=30) )
     {
@@ -351,7 +316,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] =  1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 8;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick8_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick8_ok.png);");
     }
     if( (MainWindow::area[2] == true ) && (MainWindow::angle<30) && (MainWindow::angle>=0) )
     {
@@ -359,7 +324,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] =  1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 9;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick9_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick9_ok.png);");
     }
     if( (MainWindow::area[3] == true ) && (MainWindow::angle<30) && (MainWindow::angle>=0) )
     {
@@ -367,7 +332,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] =  1;
       MainWindow::servoDirection[2] = -1;
       MainWindow::circleArea = 10;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick10_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick10_ok.png);");
     }
     if( (MainWindow::area[3] == true ) && (MainWindow::angle<60) && (MainWindow::angle>=30) )
     {
@@ -375,7 +340,7 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] =  1;
       MainWindow::circleArea = 11;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick11_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick11_ok.png);");
     }
     if( (MainWindow::area[3] == true ) && (MainWindow::angle<90) && (MainWindow::angle>=60) )
     {
@@ -383,142 +348,238 @@ void MainWindow::areaRecognition()
       MainWindow::servoDirection[1] = -1;
       MainWindow::servoDirection[2] =  1;
       MainWindow::circleArea = 12;
-      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/mis_project/media/joystick12_ok.png);");
+      ui->label_13->setStyleSheet("background-image: url(/home/km/catkin_ws/src/MIS-Robot/mis_project/media/joystick12_ok.png);");
     }
-    //ROS_INFO("Agnle: %f",MainWindow::angle);
-    MainWindow::servoDirection[0] = 1*MainWindow::servoDirection[0];
+
+    MainWindow::servoDirection[0] = -1*MainWindow::servoDirection[0];
     MainWindow::servoDirection[1] = -1*MainWindow::servoDirection[1];
     MainWindow::servoDirection[2] = -1*MainWindow::servoDirection[2];
-
-    if(MainWindow::servoDirection[0]>0)
-    {
-      ui->label_27->setText(QString("Winding"));
-    }else{
-      ui->label_27->setText(QString("Unwinding"));
-    }
-
-    if(MainWindow::servoDirection[1]>0)
-    {
-      ui->label_28->setText(QString("Unwinding"));
-    }else{
-      ui->label_28->setText(QString("Winding"));
-    }
-
-    if(MainWindow::servoDirection[2]>0)
-    {
-      ui->label_29->setText(QString("Unwinding"));
-    }else{
-      ui->label_29->setText(QString("Winding"));
-    }
     // =======================================================================================================
 }
 
 void MainWindow::MotorMotion()
 {
+  if((MainWindow::joyHorizontal == 0) && (MainWindow::joyVertical == 0))
+  {
+    if((MainWindow::circleArea >= 3) && (MainWindow::circleArea <= 6))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 1;
+      velocity.velocity   = 0;
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+    if((MainWindow::circleArea >= 7) && (MainWindow::circleArea <= 10))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 2;
+      velocity.velocity   = 0;
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+    if((MainWindow::circleArea >= 11) || (MainWindow::circleArea <= 2))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 3;
+      velocity.velocity   = 0;
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+
+    dynamixel_sdk_examples::SyncSetVelocity velocity;
+
+    velocity.id1        = 1;
+    velocity.id2        = 2;
+    velocity.id3        = 3;
+    velocity.velocity1  = 0;
+    velocity.velocity2  = 0;
+    velocity.velocity3  = 0;
+
+
+    dynamixel_vel_pub_.publish(velocity);
+  }else{
+    if((MainWindow::circleArea >= 3) && (MainWindow::circleArea <= 6))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 1;
+      velocity.velocity   = ui->horizontalSlider_2->value();
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+    if((MainWindow::circleArea >= 7) && (MainWindow::circleArea <= 10))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 2;
+      velocity.velocity   = ui->horizontalSlider_2->value();//*(-1);
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+    if((MainWindow::circleArea >= 11) || (MainWindow::circleArea <= 2))
+    {
+      dynamixel_sdk_examples::SetVelocity velocity;
+      velocity.id         = 3;
+      velocity.velocity   = ui->horizontalSlider_2->value();//*(-1);
+
+      dynamixel_vel_pub_.publish(velocity);
+    }
+  }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+  // Camera
+  system("gnome-terminal -e cheese");
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+  // Recovery button
+  franka_msgs::ErrorRecoveryActionGoal error_recovery_msg;
+  _franka_error_recovery_publisher = nh.advertise<franka_msgs::ErrorRecoveryActionGoal>("/franka_control/error_recovery/goal", 1);
+  _franka_error_recovery_publisher.publish(error_recovery_msg);
+}
+
+
+void MainWindow::on_horizontalSlider_2_actionTriggered(int action)
+{
+    // Motor coefficient for velocity
+    MainWindow::servoCoefficient =  ui->horizontalSlider_2->value();
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+  // Winding motor no. 1
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 1;
+  velocity.velocity   = ui->horizontalSlider_2->value();
+
+  dynamixel_vel_pub_.publish(velocity);
+
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+  // Stop winding motor no. 1
   dynamixel_sdk_examples::SyncSetVelocity velocity;
 
   velocity.id1        = 1;
   velocity.id2        = 2;
   velocity.id3        = 3;
-  velocity.velocity1  = MainWindow::servoVelocity[0];
-  velocity.velocity2  = MainWindow::servoVelocity[1];
-  velocity.velocity3  = MainWindow::servoVelocity[2];
+  velocity.velocity1  = 0;
+  velocity.velocity2  = 0;
+  velocity.velocity3  = 0;
 
-  dynamixel_vel_pub_  = nh.advertise<dynamixel_sdk_examples::SyncSetVelocity>("/sync_set_velocity",1000);
+  dynamixel_vel_pub_zero_.publish(velocity);
+}
+
+
+void MainWindow::on_pushButton_5_clicked()
+{
+  // Winding motor no. 2
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 2;
+  velocity.velocity   = ui->horizontalSlider_2->value();//*(-1);
+
   dynamixel_vel_pub_.publish(velocity);
-
 }
 
 
-void MainWindow::on_chobotSlider_actionTriggered(int action)
+void MainWindow::on_pushButton_6_clicked()
 {
-    //MainWindow::servoCoefficient =  ui->chobotSlider->value();
+  // Stop winding motor no. 2
+  dynamixel_sdk_examples::SyncSetVelocity velocity;
+
+  velocity.id1        = 3;
+  velocity.id2        = 1;
+  velocity.id3        = 2;
+  velocity.velocity1  = 0;
+  velocity.velocity2  = 0;
+  velocity.velocity3  = 0;
+
+  dynamixel_vel_pub_zero_.publish(velocity);
 }
 
-  /*
-  ROS_INFO("cameras: %d",QCameraInfo::availableCameras().count());
 
-  mLayout = new QVBoxLayout;
-  const QList<QCameraInfo> cameras = QCameraInfo::availableCameras();
-  for (const QCameraInfo &cameraInfo : cameras) {
-    qDebug() << "cameraInfo.deviceName: "<< cameraInfo.deviceName();
-    mCamera = new QCamera(cameraInfo);
-  }
-  mCameraViewfinder = new QCameraViewfinder();
-  mCameraViewfinder->show();
-  mCamera->setViewfinder(mCameraViewfinder);
-  //mLayout->addWidget(mCameraViewfinder);
-  mCamera->start();
-  //ui->frame_2->setLayout(mLayout);
-
-
-  //mCamera = new QCamera("/dev/video0");
-
-  //imageCapture = new QCameraImageCapture(mCamera);
-
-  //ui->horizontalLayout_9->addWidget(mCameraViewfinder);
-  //ui->label_10->setScaledContents(true);
-
-  //ui->widget_14->setLayout(mLayout);
-  //ui->frame_2->setLayout(mLayout);
-  //ui->label_10->setScaledContents(true);
-
-
-
-
-
-
-  //mCamera->setCaptureMode(QCamera::CaptureStillImage);
-
-
-
-  qDebug() << "error: " <<mCamera->error() <<
-                      "\n state:" << mCamera->state() <<
-                      "\n status: " << mCamera->status() <<
-                      "\n errorstring: " << mCamera->errorString() <<
-                      "\n camptureMode: " << mCamera->captureMode() <<
-                      "\n camera.lockStatus: " << mCamera->lockStatus() <<
-                      "\n availableMetaData: " << mCamera->availableMetaData() <<
-                      "\n camera.isAvailable: " << mCamera->isAvailable() <<
-                      "\n viewfinder.isEnabled: "<< mCameraViewfinder->isEnabled() <<
-                      "\n viewfinder.isVisible: " <<mCameraViewfinder->isVisible();
-
-  /*
-  imageCapture = new QCameraImageCapture(mCamera);
-  mCamera->setCaptureMode(QCamera::CaptureStillImage);
-  mCamera->start(); // Viewfinder frames start flowing
-  //on half pressed shutter button
-  mCamera->searchAndLock();
-  //on shutter button pressed
-  imageCapture->capture();
-  //on shutter button released
-  mCamera->unlock();
-*/
-  //mLayout->addWidget(mCameraViewfinder);
-  //ui->widget_14->setLayout(mLayout);
-
-
-  /*
-  mCamera = new QCamera(this);
-  mCameraViewfinder = new QCameraViewfinder(this);
-  mCameraImageCapture = new QCameraImageCapture(mCamera, this);
-  mLayout = new QVBoxLayout;
-  mCamera->setViewfinder(mCameraViewfinder);
-  mLayout->addWidget(mCameraViewfinder);
-  mLayout->setMargin(0);
-  mAction = new QAction("Kamera",this);
-  ui->widget_14->setLayout(mLayout);
-
-  connect(mAction, &QAction::triggered, [&](){
-    mCamera->start();
-  });
-*/
-
-
-
-
-void MainWindow::on_pushButton_2_clicked()
+void MainWindow::on_pushButton_7_clicked()
 {
-  system("gnome-terminal -e cheese");
+  // Winding motor no. 3
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 3;
+  velocity.velocity   = ui->horizontalSlider_2->value();//*(-1);
+
+  dynamixel_vel_pub_.publish(velocity);
+}
+
+
+void MainWindow::on_pushButton_8_clicked()
+{
+  // Stop winding motor no. 3
+  dynamixel_sdk_examples::SyncSetVelocity velocity;
+
+  velocity.id1        = 2;
+  velocity.id2        = 1;
+  velocity.id3        = 3;
+  velocity.velocity1  = 0;
+  velocity.velocity2  = 0;
+  velocity.velocity3  = 0;
+
+  dynamixel_vel_pub_zero_.publish(velocity);
+}
+
+
+
+void MainWindow::on_horizontalSlider_actionTriggered(int action)
+{
+  // Slider for change Panda velocity in z-axis
+  MainWindow::robot_sensitivity.data = ui->horizontalSlider->value()*0.001;
+  robot_sensitivity_ = nh.advertise<std_msgs::Float64>("/robot_sensitivity",1000);
+  robot_sensitivity_.publish(MainWindow::robot_sensitivity);
+}
+
+
+void MainWindow::on_pushButton_9_clicked()
+{
+  // Motors OFF
+  dynamixel_sdk_examples::SetStop velocity;
+
+  velocity.id        = 1;
+  velocity.velocity  = 0;
+
+  dynamixel_stop_.publish(velocity);
+}
+
+
+void MainWindow::on_pushButton_10_clicked()
+{
+  // Unwinding motor no. 1
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 1;
+  velocity.velocity   = ui->horizontalSlider_2->value()*(-1);
+
+  dynamixel_vel_pub_.publish(velocity);
+}
+
+
+void MainWindow::on_pushButton_11_clicked()
+{
+  // Unwinding motor no. 2
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 2;
+  velocity.velocity   = ui->horizontalSlider_2->value()*(-1);
+
+  dynamixel_vel_pub_.publish(velocity);
+}
+
+
+void MainWindow::on_pushButton_12_clicked()
+{
+  // Unwinding motor no. 3
+  dynamixel_sdk_examples::SetVelocity velocity;
+  velocity.id         = 3;
+  velocity.velocity   = ui->horizontalSlider_2->value()*(-1);
+
+  dynamixel_vel_pub_.publish(velocity);
 }
 

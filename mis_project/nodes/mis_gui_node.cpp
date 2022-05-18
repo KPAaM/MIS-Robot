@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <QIcon>
 #include "mis_project.h"
-
+#include <QRect>
 
 int main(int argc, char *argv[])
 {

@@ -6,6 +6,14 @@
 	<arg default="$(find franka_mis_description)/urdf/table_mis.xacro" name="model"/>
   <param command="$(find xacro)/xacro $(arg model)" name="robot_description"/>
 	 <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+
+    <node name="mis_gui_node" pkg="mis_project" type="mis_gui_node" output="screen" />
+    
+    
+   <node name="sync_read_write_velocity_node" pkg="dynamixel_sdk_examples" type="sync_read_write_velocity_node" output="screen" /> 
+   <node name="read_write_winding_node" pkg="dynamixel_sdk_examples" type="read_write_winding_node" output="screen" /> 
+   <node name="read_write_stop" pkg="dynamixel_sdk_examples" type="read_write_stop" output="screen" /> 
+<!--
     <arg default="$(find franka_mis_description)/config/mis.rviz" name="rvizconfig"/>
-    <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/>
+    <node args="-d $(arg rvizconfig)" name="rviz" pkg="rviz" required="true" type="rviz"/> -->
 </launch>

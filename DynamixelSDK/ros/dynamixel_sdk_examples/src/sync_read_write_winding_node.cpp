@@ -131,29 +131,6 @@ void syncSetVelocityCallback(const dynamixel_sdk_examples::SyncSetVelocity::Cons
   uint8_t param_goal_velocity2[4];
   uint8_t param_goal_velocity3[4];
 
-  // ========================== TORQUE ENABLE ==========================
-  dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL1_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
-  if (dxl_comm_result != COMM_SUCCESS) {
-    ROS_ERROR("Failed to enable torque for Dynamixel ID %d", DXL1_ID);
-    //return -1;
-  }
-
-  dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL2_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
-  if (dxl_comm_result != COMM_SUCCESS) {
-    ROS_ERROR("Failed to enable torque for Dynamixel ID %d", DXL2_ID);
-    //return -1;
-  }
-
-  dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL3_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
-  if (dxl_comm_result != COMM_SUCCESS) {
-    ROS_ERROR("Failed to enable torque for Dynamixel ID %d", DXL3_ID);
-    //return -1;
-  }
-  // ====================================================================
-
   // Velocity Value of X series is 4 byte data. For AX & MX(1.0) use 2 byte data(uint16_t) for the Velocity Value.
   uint32_t velocity1 = (unsigned int)msg->velocity1; // Convert int32 -> uint32
   param_goal_velocity1[0] = DXL_LOBYTE(DXL_LOWORD(velocity1));
@@ -191,9 +168,9 @@ void syncSetVelocityCallback(const dynamixel_sdk_examples::SyncSetVelocity::Cons
 
   dxl_comm_result = groupSyncWrite.txPacket();
   if (dxl_comm_result == COMM_SUCCESS) {
-    ROS_INFO("syncSetVelocity : [ID:%d] [VELOCITY:%d]", msg->id1, msg->velocity1);
-    ROS_INFO("syncSetVelocity : [ID:%d] [VELOCITY:%d]", msg->id2, msg->velocity2);
-    ROS_INFO("syncSetVelocity : [ID:%d] [VELOCITY:%d]", msg->id3, msg->velocity3);
+    ROS_INFO("setVelocity : [ID:%d] [VELOCITY:%d]", msg->id1, msg->velocity1);
+    ROS_INFO("setVelocity : [ID:%d] [VELOCITY:%d]", msg->id2, msg->velocity2);
+    ROS_INFO("setVelocity : [ID:%d] [VELOCITY:%d]", msg->id3, msg->velocity3);
   } else {
     ROS_ERROR("Failed to set velocity! Result: %d", dxl_comm_result);
   }
@@ -215,10 +192,9 @@ int main(int argc, char ** argv)
     ROS_ERROR("Failed to set the baudrate!");
     return -1;
   }
-  /*
-  // ============================ LED OFF ===========================
+  // ============================ LED ON/OFF =======================
   dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL1_ID, ADDR_LED_ON_OFF, 0, &dxl_error);
+    portHandler, DXL1_ID, ADDR_LED_ON_OFF, 1, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS) {
     ROS_ERROR("Failed to enable LED for Dynamixel ID %d", DXL1_ID);
     return -1;
@@ -237,11 +213,10 @@ int main(int argc, char ** argv)
   if (dxl_comm_result != COMM_SUCCESS) {
     ROS_ERROR("Failed to enable LED for Dynamixel ID %d", DXL3_ID);
     return -1;
-  }*/
+  }
   // ================================================================
 
   // ======================== VELOCITY MODE =========================
-
   dxl_comm_result = packetHandler->write1ByteTxRx(
     portHandler, DXL1_ID, ADDR_OPERATING_MODE, 1, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS) {
@@ -263,7 +238,7 @@ int main(int argc, char ** argv)
     return -1;
   }
   // ================================================================
-
+  // ==================== TORQUE ENABLE/DISABLE =====================
   dxl_comm_result = packetHandler->write1ByteTxRx(
     portHandler, DXL1_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS) {
@@ -272,24 +247,24 @@ int main(int argc, char ** argv)
   }
 
   dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL2_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
+    portHandler, DXL2_ID, ADDR_TORQUE_ENABLE, 0, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS) {
     ROS_ERROR("Failed to enable torque for Dynamixel ID %d", DXL2_ID);
     return -1;
   }
 
   dxl_comm_result = packetHandler->write1ByteTxRx(
-    portHandler, DXL3_ID, ADDR_TORQUE_ENABLE, 1, &dxl_error);
+    portHandler, DXL3_ID, ADDR_TORQUE_ENABLE, 0, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS) {
     ROS_ERROR("Failed to enable torque for Dynamixel ID %d", DXL3_ID);
     return -1;
   }
+  // ================================================================
 
-
-  ros::init(argc, argv, "sync_read_write_velocity_node");
+  ros::init(argc, argv, "sync_read_write_winding_node");
   ros::NodeHandle nh;
-  ros::ServiceServer sync_get_velocity_srv = nh.advertiseService("/sync_get_velocity", syncGetPresentVelocityCallback);
-  ros::Subscriber sync_set_velocity_sub = nh.subscribe("/sync_set_velocity", 10, syncSetVelocityCallback);
+  ros::ServiceServer sync_get_velocity_srv = nh.advertiseService("/sync_get_winding_velocity", syncGetPresentVelocityCallback);
+  ros::Subscriber sync_set_velocity_sub = nh.subscribe("/sync_set_winding_velocity", 10, syncSetVelocityCallback);
   ros::spin();
 
   portHandler->closePort();

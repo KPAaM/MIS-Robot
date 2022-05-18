@@ -1,3 +1,0 @@
-<launch>
-  <node name="mis_gui_node" pkg="mis_project" type="mis_gui_node" output="screen"/>
-</launch>

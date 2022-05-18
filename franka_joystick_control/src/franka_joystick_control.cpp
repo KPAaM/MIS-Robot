@@ -2,7 +2,15 @@
 #include <Eigen/Dense>
 #include <Eigen/Geometry>
 #include <math.h>
+#include <std_msgs/Float64.h>
 
+double OFFSET = 0.01;
+
+void robotSensitivityCallback(const std_msgs::Float64::ConstPtr &msg)
+{
+  OFFSET = msg->data;
+  ROS_INFO("Robot_sensitivity: %f", OFFSET);
+}
 
 int main(int argc, char **argv)
 {
@@ -17,7 +25,7 @@ int main(int argc, char **argv)
   // Subscriber for joystick feedback
   ros::Subscriber sub = nh.subscribe("/joystick_feedback", 1, &FrankaJoystickControl::joystickCallback, &control);
   ros::Subscriber sub_franka_state = nh.subscribe("/franka_state_controller/joint_states", 1, &FrankaJoystickControl::FrankaStateCallback, &control);
-  
+  ros::Subscriber sub_robot_sensitivity = nh.subscribe("/robot_sensitivity",1, &robotSensitivityCallback);
   // Difference between goal_pose and current pose representing cartesian direction for velocity
   geometry_msgs::Twist delta_pose;  
   delta_pose.angular.x = 0.0;
@@ -28,19 +36,19 @@ int main(int argc, char **argv)
   ros::Duration(1).sleep();
   ROS_INFO("Control interface is ready...");
 
-  // Create goal transformation matrix
-  const double OFFSET = 0.05;
-  Eigen::MatrixXd  X_eef_goal(4,4);
-  X_eef_goal << 1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, OFFSET,
-                0, 0, 0, 1;
-  Eigen::Matrix4d  X_base_goal = control.X_base_eef * X_eef_goal;
+
 
   //------Main loop--------
   ros::Rate rate(200.0);
   while(ros::ok())
   {
+    // Create goal transformation matrix
+    Eigen::MatrixXd  X_eef_goal(4,4);
+    X_eef_goal << 1, 0, 0, 0,
+                  0, 1, 0, 0,
+                  0, 0, 1, OFFSET,
+                  0, 0, 0, 1;
+    Eigen::Matrix4d  X_base_goal = control.X_base_eef * X_eef_goal;
     // Recover from error
     if (control.joystick_cmd.error_recovery)
     {

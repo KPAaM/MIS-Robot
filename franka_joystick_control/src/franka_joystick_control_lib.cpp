@@ -1,7 +1,6 @@
 #include "franka_joystick_control/franka_joystick_control_lib.h"
 #include <functional>
 
-
 ///////////////////////////////////////////////////////////////////////
 /// \brief FrankaJoystickControl::FrankaJoystickControl Initialization of moveit and ros communication features
 /// \param nh ros::NodeHandle pointer
@@ -12,6 +11,7 @@ FrankaJoystickControl::FrankaJoystickControl(ros::NodeHandle *nh)
   _franka_error_recovery_publisher = nh->advertise<franka_msgs::ErrorRecoveryActionGoal>("/franka_control/error_recovery/goal", 1);
   _switch_controller_service = nh->serviceClient<controller_manager_msgs::SwitchController>("/controller_manager/switch_controller");
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////
